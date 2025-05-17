@@ -1,4 +1,4 @@
-﻿package main
+﻿package ClientHandler
 
 import (
 	"log"
@@ -7,6 +7,10 @@ import (
 	"runtime"
 )
 
+// Sum вычисляет сумму элементов среза numbers типа T.
+//
+// @param numbers срез чисел типа T (int или float64)
+// @return сумма всех элементов среза
 func Sum[T ~int | ~float64](numbers []T) T {
 	var total T
 	for _, n := range numbers {
@@ -15,6 +19,10 @@ func Sum[T ~int | ~float64](numbers []T) T {
 	return total
 }
 
+// runScriptLinux выполняет переданный скрипт shell в Linux/Unix-системах.
+//
+// @param script строка с shell-скриптом
+// @return вывод скрипта и ошибка (если есть)
 func runScriptLinux(script string) (string, error) {
 	tmp, err := os.CreateTemp("", "*.sh")
 	if err != nil {
@@ -47,6 +55,10 @@ func runScriptLinux(script string) (string, error) {
 	return string(out), err
 }
 
+// runScriptWindows выполняет переданный скрипт в Windows через .bat файл.
+//
+// @param script строка с bat-скриптом
+// @return вывод скрипта и ошибка (если есть)
 func runScriptWindows(script string) (string, error) {
 	tmp, err := os.CreateTemp("", "*.bat")
 	if err != nil {
@@ -74,6 +86,10 @@ func runScriptWindows(script string) (string, error) {
 	return string(out), err
 }
 
+// runScript выполняет скрипт в зависимости от ОС (Windows или Linux).
+//
+// @param script строка скрипта
+// @return вывод скрипта и ошибка (если есть)
 func runScript(script string) (string, error) {
 	if runtime.GOOS == "windows" {
 		return runScriptWindows(script)
@@ -81,6 +97,10 @@ func runScript(script string) (string, error) {
 	return runScriptLinux(script)
 }
 
+// runCommand выполняет команду cmdStr в командной строке ОС.
+//
+// @param cmdStr строка команды
+// @return вывод команды и ошибка (если есть)
 func runCommand(cmdStr string) (string, error) {
 	var cmd *exec.Cmd
 
@@ -95,6 +115,9 @@ func runCommand(cmdStr string) (string, error) {
 	return string(out), err
 }
 
+// reboot перезагружает компьютер в зависимости от ОС.
+//
+// @return ошибка, если перезагрузка не удалась
 func reboot() error {
 	// Перезагрузка Linux/Unix
 	var cmd *exec.Cmd

@@ -1,4 +1,4 @@
-﻿package main
+﻿package ClientHandler
 
 import (
 	"context"
@@ -10,6 +10,9 @@ import (
 	"strings"
 )
 
+// GetAllDockerImages возвращает список всех docker-образов на хосте.
+//
+// @return срез указателей на DockerImage
 func GetAllDockerImages() []*DockerImage {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
@@ -37,6 +40,9 @@ func GetAllDockerImages() []*DockerImage {
 	return imgs
 }
 
+// GetAllDockerContainers возвращает список всех docker-контейнеров на хосте.
+//
+// @return срез указателей на DockerContainer
 func GetAllDockerContainers() []*DockerContainer {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
@@ -67,6 +73,10 @@ func GetAllDockerContainers() []*DockerContainer {
 	return conts
 }
 
+// StopDockerContainer останавливает контейнер по его хешу.
+//
+// @param containerHash хеш контейнера
+// @return true и пустая строка при успехе, иначе false и сообщение об ошибке
 func StopDockerContainer(containerHash string) (bool, string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
@@ -85,6 +95,10 @@ func StopDockerContainer(containerHash string) (bool, string) {
 	return true, ""
 }
 
+// RemoveDockerContainer удаляет контейнер по его хешу.
+//
+// @param containerHash хеш контейнера
+// @return true и пустая строка при успехе, иначе false и сообщение об ошибке
 func RemoveDockerContainer(containerHash string) (bool, string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
@@ -103,6 +117,10 @@ func RemoveDockerContainer(containerHash string) (bool, string) {
 	return true, ""
 }
 
+// RemoveDockerImage удаляет docker-образ по его хешу.
+//
+// @param imageHash хеш образа
+// @return true и пустая строка при успехе, иначе false и сообщение об ошибке
 func RemoveDockerImage(imageHash string) (bool, string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
@@ -121,6 +139,10 @@ func RemoveDockerImage(imageHash string) (bool, string) {
 	return true, ""
 }
 
+// StartDockerContainer запускает контейнер по его хешу.
+//
+// @param containerHash хеш контейнера
+// @return true и пустая строка при успехе, иначе false и сообщение об ошибке
 func StartDockerContainer(containerHash string) (bool, string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 

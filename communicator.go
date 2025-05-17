@@ -1,4 +1,4 @@
-﻿package main
+﻿package ClientHandler
 
 import (
 	"encoding/json"
@@ -8,6 +8,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// Communicator обеспечивает взаимодействие с сервером по WebSocket.
+//
+// @field Token токен авторизации
+// @field Ip IP-адрес сервера
+// @field Con WebSocket-соединение
+// @field Requests очередь исходящих сообщений
 type Communicator struct {
 	Token    string
 	Ip       string
@@ -15,6 +21,11 @@ type Communicator struct {
 	Requests AtomicQueue[*SentMessage]
 }
 
+// NewCommunicator создает новый экземпляр Communicator.
+//
+// @param token токен авторизации
+// @param ip IP-адрес сервера
+// @return указатель на Communicator
 func NewCommunicator(token string, ip string) *Communicator {
 	return &Communicator{
 		Token: token,
@@ -23,6 +34,9 @@ func NewCommunicator(token string, ip string) *Communicator {
 	}
 }
 
+// SendMessage отправляет сообщение серверу по WebSocket.
+//
+// @param message указатель на отправляемое сообщение
 func (c *Communicator) SendMessage(message *SentMessage) {
 	err := c.Con.WriteJSON(message)
 
@@ -31,6 +45,7 @@ func (c *Communicator) SendMessage(message *SentMessage) {
 	}
 }
 
+// Connect устанавливает WebSocket-соединение с сервером и отправляет стартовое сообщение.
 func (c *Communicator) Connect() {
 	// Формируем URL для соединения по WebSocket
 	u := url.URL{Scheme: "ws", Host: c.Ip, Path: "/ws"}
@@ -51,6 +66,7 @@ func (c *Communicator) Connect() {
 	c.SendStartMessage()
 }
 
+// Close закрывает WebSocket-соединение.
 func (c *Communicator) Close() {
 	// Закрываем соединение
 	if c.Con != nil {
@@ -64,6 +80,7 @@ func (c *Communicator) Close() {
 	}
 }
 
+// StartHandlingThread запускает горутину для обработки входящих сообщений от сервера.
 func (c *Communicator) StartHandlingThread() {
 	// Запускаем горутину для обработки сообщений
 	go func() {
@@ -181,6 +198,7 @@ func (c *Communicator) StartHandlingThread() {
 	}()
 }
 
+// SendStartMessage формирует и отправляет стартовое сообщение серверу.
 func (c *Communicator) SendStartMessage() {
 	message := SentStartMessage{
 		Type:             Start,
