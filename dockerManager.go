@@ -52,10 +52,6 @@ func GetAllDockerContainers() []*DockerContainer {
 
 	conts := make([]*DockerContainer, len(containers))
 
-	fmt.Print("asd\n")
-	fmt.Print(len(containers))
-	fmt.Print("\n")
-
 	for i, cont := range containers {
 		conts[i] = &DockerContainer{
 			Id:        0,
