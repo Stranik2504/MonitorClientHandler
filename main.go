@@ -1,4 +1,4 @@
-﻿package ClientHandler
+package main
 
 import (
 	"encoding/json"
@@ -8,13 +8,11 @@ import (
 	"time"
 )
 
-//
 // ensureConfig проверяет наличие конфигурационного файла по указанному пути.
 // Если файл отсутствует, создает его с дефолтными значениями.
 //
 // @param path путь к конфигурационному файлу
 // @return указатель на Config и ошибка (если есть)
-//
 func ensureConfig(path string) (*Config, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		defaultCfg := Config{
@@ -38,12 +36,10 @@ func ensureConfig(path string) (*Config, error) {
 	return loadConfig(path)
 }
 
-//
 // loadConfig загружает конфигурацию из файла по указанному пути.
 //
 // @param path путь к конфигурационному файлу
 // @return указатель на Config и ошибка (если есть)
-//
 func loadConfig(path string) (*Config, error) {
 	file, err := os.Open(path)
 
@@ -64,17 +60,15 @@ func loadConfig(path string) (*Config, error) {
 	return &cfg, nil
 }
 
-//
 // watchDocker отслеживает изменения docker-контейнеров и образов с заданным интервалом.
 // При обнаружении изменений отправляет соответствующие сообщения через Communicator.
 //
 // @param c указатель на Communicator
 // @param interval интервал проверки изменений
-//
 func watchDocker(c *Communicator, interval time.Duration) {
 	prevCont := GetAllDockerContainers()
-	prevImg  := GetAllDockerImages()
-	ticker   := time.NewTicker(interval)
+	prevImg := GetAllDockerImages()
+	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
 	prevCMap := make(map[string]*DockerContainer)
@@ -149,9 +143,7 @@ func watchDocker(c *Communicator, interval time.Duration) {
 	}
 }
 
-//
 // main является точкой входа в приложение.
-//
 func main() {
 	cfg, err := ensureConfig("config.json")
 
@@ -165,8 +157,7 @@ func main() {
 	com.Connect()
 	com.StartHandlingThread()
 
-	go watchDocker(com, 10 * time.Second)
+	go watchDocker(com, 10*time.Second)
 
 	select {} // Держим приложение живым
 }
-
