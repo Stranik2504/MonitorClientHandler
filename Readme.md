@@ -1,7 +1,7 @@
 ﻿
 # ClientHandler
 
-Серверное приложение на Go для обработки запросов клиентов.
+Клиенское приложение на Go для работы с MonitorHandler (https://github.com/Stranik2504/MonitorHandler).
 
 ## Зависимости
 
